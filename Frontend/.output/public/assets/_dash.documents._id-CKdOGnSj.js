@@ -1,0 +1,1 @@
+import{s as e,t}from"./link-BiDG0Mf6.js";var n=e(),r=()=>(0,n.jsxs)(`div`,{className:`py-20 text-center`,children:[(0,n.jsx)(`p`,{className:`font-semibold`,children:`Document not found`}),(0,n.jsx)(t,{to:`/files`,className:`text-sm text-primary`,children:`Back to My Files`})]});export{r as notFoundComponent};

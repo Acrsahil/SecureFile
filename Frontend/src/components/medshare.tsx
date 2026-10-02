@@ -1,7 +1,7 @@
 import { Link } from "@tanstack/react-router";
 import { ShieldCheck } from "lucide-react";
 import { cn } from "@/lib/utils";
-import type { Status } from "@/lib/mock-data";
+type Status = "Shared" | "Private" | "Pending" | "Revoked";
 
 export function Logo({ className }: { className?: string }) {
   return (

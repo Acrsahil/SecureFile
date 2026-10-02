@@ -18,6 +18,7 @@ import { Route as RegisterRouteImport } from './routes/register'
 import { Route as DashActivityRouteImport } from './routes/_dash.activity'
 import { Route as DashDashboardRouteImport } from './routes/_dash.dashboard'
 import { Route as DashFilesRouteImport } from './routes/_dash.files'
+import { Route as DashPatientsRouteImport } from './routes/_dash.patients'
 import { Route as DashProfileRouteImport } from './routes/_dash.profile'
 import { Route as DashSharedRouteImport } from './routes/_dash.shared'
 import { Route as DashUploadRouteImport } from './routes/_dash.upload'
@@ -67,6 +68,11 @@ const DashFilesRoute = DashFilesRouteImport.update({
   path: '/files',
   getParentRoute: () => DashRoute,
 } as any)
+const DashPatientsRoute = DashPatientsRouteImport.update({
+  id: '/patients',
+  path: '/patients',
+  getParentRoute: () => DashRoute,
+} as any)
 const DashProfileRoute = DashProfileRouteImport.update({
   id: '/profile',
   path: '/profile',
@@ -97,6 +103,7 @@ export interface FileRoutesByFullPath {
   '/activity': typeof DashActivityRoute
   '/dashboard': typeof DashDashboardRoute
   '/files': typeof DashFilesRoute
+  '/patients': typeof DashPatientsRoute
   '/profile': typeof DashProfileRoute
   '/shared': typeof DashSharedRoute
   '/upload': typeof DashUploadRoute
@@ -111,6 +118,7 @@ export interface FileRoutesByTo {
   '/activity': typeof DashActivityRoute
   '/dashboard': typeof DashDashboardRoute
   '/files': typeof DashFilesRoute
+  '/patients': typeof DashPatientsRoute
   '/profile': typeof DashProfileRoute
   '/shared': typeof DashSharedRoute
   '/upload': typeof DashUploadRoute
@@ -127,6 +135,7 @@ export interface FileRoutesById {
   '/_dash/activity': typeof DashActivityRoute
   '/_dash/dashboard': typeof DashDashboardRoute
   '/_dash/files': typeof DashFilesRoute
+  '/_dash/patients': typeof DashPatientsRoute
   '/_dash/profile': typeof DashProfileRoute
   '/_dash/shared': typeof DashSharedRoute
   '/_dash/upload': typeof DashUploadRoute
@@ -143,6 +152,7 @@ export interface FileRouteTypes {
     | '/activity'
     | '/dashboard'
     | '/files'
+    | '/patients'
     | '/profile'
     | '/shared'
     | '/upload'
@@ -157,6 +167,7 @@ export interface FileRouteTypes {
     | '/activity'
     | '/dashboard'
     | '/files'
+    | '/patients'
     | '/profile'
     | '/shared'
     | '/upload'
@@ -172,6 +183,7 @@ export interface FileRouteTypes {
     | '/_dash/activity'
     | '/_dash/dashboard'
     | '/_dash/files'
+    | '/_dash/patients'
     | '/_dash/profile'
     | '/_dash/shared'
     | '/_dash/upload'
@@ -252,6 +264,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof DashFilesRouteImport
       parentRoute: typeof DashRoute
     }
+    '/_dash/patients': {
+      id: '/_dash/patients'
+      path: '/patients'
+      fullPath: '/patients'
+      preLoaderRoute: typeof DashPatientsRouteImport
+      parentRoute: typeof DashRoute
+    }
     '/_dash/profile': {
       id: '/_dash/profile'
       path: '/profile'
@@ -287,6 +306,7 @@ interface DashRouteChildren {
   DashActivityRoute: typeof DashActivityRoute
   DashDashboardRoute: typeof DashDashboardRoute
   DashFilesRoute: typeof DashFilesRoute
+  DashPatientsRoute: typeof DashPatientsRoute
   DashProfileRoute: typeof DashProfileRoute
   DashSharedRoute: typeof DashSharedRoute
   DashUploadRoute: typeof DashUploadRoute
@@ -297,6 +317,7 @@ const DashRouteChildren: DashRouteChildren = {
   DashActivityRoute: DashActivityRoute,
   DashDashboardRoute: DashDashboardRoute,
   DashFilesRoute: DashFilesRoute,
+  DashPatientsRoute: DashPatientsRoute,
   DashProfileRoute: DashProfileRoute,
   DashSharedRoute: DashSharedRoute,
   DashUploadRoute: DashUploadRoute,
