@@ -11,7 +11,7 @@ import { authAPI, saveTokens, saveUser, hierarchyAPI, type User } from "@/lib/ap
 export const Route = createFileRoute("/register")({
   head: () => ({
     meta: [
-      { title: "Register — MedShare" },
+      { title: "Register — SecureMediShare" },
       { name: "description", content: "Create a MedShare account as a patient, doctor or hospital staff." },
       { property: "og:title", content: "Register — MedShare" },
       { property: "og:description", content: "Join MedShare to share medical documents securely." },

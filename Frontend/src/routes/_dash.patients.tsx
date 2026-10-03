@@ -9,7 +9,7 @@ import { Button } from "@/components/ui/button";
 
 export const Route = createFileRoute("/_dash/patients")({
     head: () => ({
-        meta: [{ title: "Team & Patients — MedShare" }],
+        meta: [{ title: "Team & Patients — SecureMediShare" }],
     }),
     component: PatientsAndTeam,
 });

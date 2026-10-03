@@ -1,7 +1,9 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
+import { useEffect, useState } from "react";
 import { ArrowRight, FileText, Lock, UserCheck, ShieldCheck, Stethoscope } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { PublicFooter, PublicNav } from "@/components/public-nav";
+import { publicAPI } from "@/lib/api";
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -22,6 +24,14 @@ const features = [
 ];
 
 function Index() {
+  const [preview, setPreview] = useState<{ recent_documents: any[]; recent_activity: any }>({ recent_documents: [], recent_activity: null });
+
+  useEffect(() => {
+    publicAPI.preview().then(res => {
+      if (res.data) setPreview(res.data);
+    }).catch(() => { });
+  }, []);
+
   return (
     <div className="min-h-screen">
       <PublicNav />
@@ -48,19 +58,31 @@ function Index() {
                 <p className="font-display font-semibold">Recent documents</p>
                 <Lock className="h-4 w-4 text-teal" />
               </div>
-              {["MRI Report", "Blood Test Report", "Prescription"].map((d, i) => (
-                <div key={d} className="mt-4 flex items-center gap-3 rounded-2xl bg-muted p-3">
-                  <span className="grid h-10 w-10 place-items-center rounded-xl bg-accent text-accent-foreground"><FileText className="h-5 w-5" /></span>
-                  <div className="flex-1">
-                    <p className="text-sm font-semibold">{d}</p>
-                    <p className="text-xs text-muted-foreground">Shared with Dr. Anil Sharma</p>
+              {preview.recent_documents.length > 0 ? (
+                preview.recent_documents.map((d: any, i: number) => (
+                  <div key={d.id || i} className="mt-4 flex items-center gap-3 rounded-2xl bg-muted p-3">
+                    <span className="grid h-10 w-10 place-items-center rounded-xl bg-accent text-accent-foreground"><FileText className="h-5 w-5" /></span>
+                    <div className="flex-1">
+                      <p className="text-sm font-semibold">{d.title}</p>
+                      <p className="text-xs text-muted-foreground">{`Uploaded by ${d.uploaded_by_name}`}</p>
+                    </div>
+                    <span className="rounded-full bg-success-soft px-2 py-0.5 text-xs font-semibold text-success">Shared</span>
                   </div>
-                  <span className="rounded-full bg-success-soft px-2 py-0.5 text-xs font-semibold text-success">{i === 2 ? "Private" : "Shared"}</span>
+                ))
+              ) : (
+                <div className="mt-4 p-4 text-sm text-center text-muted-foreground rounded-2xl border border-dashed">
+                  No public documents securely shared yet.
                 </div>
-              ))}
-              <div className="mt-4 flex items-center gap-2 rounded-2xl bg-teal-soft p-3 text-sm text-teal">
-                <Stethoscope className="h-4 w-4" /> Dr. Sharma accessed MRI Report
-              </div>
+              )}
+              {preview.recent_activity ? (
+                <div className="mt-4 flex items-center gap-2 rounded-2xl bg-teal-soft p-3 text-sm text-teal">
+                  <Stethoscope className="h-4 w-4" /> {preview.recent_activity.description}
+                </div>
+              ) : (
+                <div className="mt-4 flex items-center gap-2 rounded-2xl bg-teal-soft p-3 text-sm text-teal">
+                  <Stethoscope className="h-4 w-4" /> No recent secure activity.
+                </div>
+              )}
             </div>
           </div>
         </div>

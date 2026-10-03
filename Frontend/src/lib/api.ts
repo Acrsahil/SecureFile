@@ -167,6 +167,10 @@ async function apiFetch<T>(
 // Auth API
 // ---------------------------------------------------------------------------
 
+export const publicAPI = {
+  preview: () => apiFetch<{ recent_documents: any[]; recent_activity: any }>("/public-preview/"),
+};
+
 export const authAPI = {
   register: (data: {
     full_name: string;

@@ -23,7 +23,7 @@ var Route = createFileRoute("/_dash/documents/$id")({
 			property: "og:description",
 			content: "Authorized access document viewer."
 		}
-	] : [{ title: "Not found — MedShare" }, {
+	] : [{ title: "Not found — SecureMediShare" }, {
 		name: "robots",
 		content: "noindex"
 	}] }),

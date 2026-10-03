@@ -9,7 +9,7 @@ export function Logo({ className }: { className?: string }) {
       <span className="grid h-9 w-9 place-items-center rounded-xl bg-brand text-primary-foreground shadow-glow">
         <ShieldCheck className="h-5 w-5" />
       </span>
-      Med<span className="text-brand">Share</span>
+      Secure Medi<span className="text-brand">Share</span>
     </Link>
   );
 }
