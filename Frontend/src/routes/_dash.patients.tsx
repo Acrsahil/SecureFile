@@ -16,6 +16,7 @@ export const Route = createFileRoute("/_dash/patients")({
 
 function PatientsAndTeam() {
     const [patients, setPatients] = useState<User[]>([]);
+    const [unassignedPatients, setUnassignedPatients] = useState<User[]>([]);
     const [staff, setStaff] = useState<User[]>([]);
     const [loading, setLoading] = useState(true);
 
@@ -29,12 +30,14 @@ function PatientsAndTeam() {
 
     const fetchData = async () => {
         try {
-            const [pRes, sRes] = await Promise.all([
+            const [pRes, sRes, uRes] = await Promise.all([
                 hierarchyAPI.myPatients(),
                 hierarchyAPI.staffList(),
+                hierarchyAPI.unassignedPatients(),
             ]);
             if (pRes.data) setPatients(pRes.data);
             if (sRes.data) setStaff(sRes.data);
+            if (uRes.data) setUnassignedPatients(uRes.data);
         } catch (err) {
             toast.error("Failed to load users");
         } finally {
@@ -145,6 +148,18 @@ function PatientsAndTeam() {
                         </div>
                     )}
                 </section>
+
+                {/* Unassigned Patients Section */}
+                {unassignedPatients.length > 0 && (
+                    <section>
+                        <div className="mb-4 flex items-center gap-2 text-lg font-semibold border-b pb-2 mt-8">
+                            <UserPlus className="h-5 w-5 text-muted-foreground" /> Unassigned Patients ({unassignedPatients.length})
+                        </div>
+                        <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+                            {unassignedPatients.map(p => <UserCard key={p.id} u={p} />)}
+                        </div>
+                    </section>
+                )}
 
                 {/* Staff Section */}
                 <section>

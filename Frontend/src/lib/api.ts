@@ -152,8 +152,12 @@ async function apiFetch<T>(
   const json = await res.json();
 
   if (!res.ok) {
-    // Throw so callers can catch and show error toasts
-    throw new Error(json.message || "Request failed");
+    let msg = json.message || "Request failed";
+    if (json.errors && typeof json.errors === "object") {
+      const fieldErrors = Object.values(json.errors).flat().join(" ");
+      if (fieldErrors) msg = `${msg} ${fieldErrors}`;
+    }
+    throw new Error(msg.trim());
   }
 
   return json;
@@ -170,6 +174,7 @@ export const authAPI = {
     role: string;
     password: string;
     password2: string;
+    assigned_to?: number | null;
   }) =>
     apiFetch<{ user: User; access: string; refresh: string }>("/auth/register/", {
       method: "POST",
@@ -302,6 +307,8 @@ export const usersAPI = {
 
 export const hierarchyAPI = {
   myPatients: () => apiFetch<User[]>("/my-patients/"),
+
+  unassignedPatients: () => apiFetch<User[]>("/unassigned-patients/"),
 
   staffList: () => apiFetch<User[]>("/staff-list/"),
 

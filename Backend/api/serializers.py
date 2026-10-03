@@ -13,12 +13,15 @@ from .models import User, Document, DocumentAccess, AccessRequest, ActivityLog
 # ---------------------------------------------------------------------------
 
 class RegisterSerializer(serializers.ModelSerializer):
-    password  = serializers.CharField(write_only=True, min_length=6, validators=[validate_password])
+    password  = serializers.CharField(write_only=True, min_length=6)
     password2 = serializers.CharField(write_only=True, label="Confirm password")
+    assigned_to = serializers.PrimaryKeyRelatedField(
+        queryset=User.objects.all(), required=False, allow_null=True
+    )
 
     class Meta:
         model  = User
-        fields = ["id", "full_name", "email", "role", "password", "password2"]
+        fields = ["id", "full_name", "email", "role", "password", "password2", "assigned_to"]
 
     def validate_role(self, value):
         # ADMIN accounts must be created through Django admin, not self-registration

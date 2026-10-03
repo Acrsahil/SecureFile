@@ -65,5 +65,6 @@ urlpatterns = [
     # Hierarchy
     # -----------------------------------------------------------------------
     path("my-patients/", views.my_patients, name="my-patients"),
+    path("unassigned-patients/", views.unassigned_patients, name="unassigned-patients"),
     path("staff-list/", views.staff_list, name="staff-list"),
 ]

@@ -8,7 +8,7 @@ Authentication → Documents → Sharing → Access Requests → Activity → Da
 from django.http import FileResponse
 from django.shortcuts import get_object_or_404
 from rest_framework import status
-from rest_framework.decorators import api_view, permission_classes, parser_classes
+from rest_framework.decorators import api_view, permission_classes, parser_classes, authentication_classes
 from rest_framework.parsers import MultiPartParser, FormParser, JSONParser
 from rest_framework.permissions import IsAuthenticated, AllowAny
 from rest_framework.response import Response
@@ -67,6 +67,7 @@ def log_activity(user, action, document=None, description=""):
 # ===========================================================================
 
 @api_view(["POST"])
+@authentication_classes([])
 @permission_classes([AllowAny])
 def register(request):
     """
@@ -95,6 +96,7 @@ def register(request):
 
 
 @api_view(["POST"])
+@authentication_classes([])
 @permission_classes([AllowAny])
 def login_view(request):
     """
@@ -670,6 +672,24 @@ def my_patients(request):
 
 @api_view(["GET"])
 @permission_classes([IsAuthenticated])
+def unassigned_patients(request):
+    """
+    GET /api/unassigned-patients/
+    Return patients that have no assigned doctor/nurse.
+    """
+    user = request.user
+    if user.role not in ["DOCTOR", "NURSE", "ADMIN"]:
+        return error("Permission denied.", status_code=status.HTTP_403_FORBIDDEN)
+    
+    # Exclude admins/doctors/nurses, only get unassigned PATIENTS
+    patients = User.objects.filter(role="PATIENT", assigned_to__isnull=True, is_active=True)
+    serializer = PatientSerializer(patients, many=True)
+    return success(data=serializer.data)
+
+
+@api_view(["GET"])
+@authentication_classes([])
+@permission_classes([AllowAny])
 def staff_list(request):
     """
     GET /api/staff-list/

@@ -1,12 +1,12 @@
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { AuthShell } from "@/components/auth-shell";
-import { authAPI, saveTokens, saveUser } from "@/lib/api";
+import { authAPI, saveTokens, saveUser, hierarchyAPI, type User } from "@/lib/api";
 
 export const Route = createFileRoute("/register")({
   head: () => ({
@@ -28,6 +28,14 @@ function Register() {
   const [pw, setPw] = useState("");
   const [pw2, setPw2] = useState("");
   const [loading, setLoading] = useState(false);
+  const [doctors, setDoctors] = useState<User[]>([]);
+  const [selectedDoctor, setSelectedDoctor] = useState<string>("0");
+
+  useEffect(() => {
+    hierarchyAPI.staffList().then((res) => {
+      if (res.data) setDoctors(res.data.filter(u => u.role === "DOCTOR"));
+    }).catch(() => { });
+  }, []);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -43,6 +51,7 @@ function Register() {
         role,
         password: pw,
         password2: pw2,
+        assigned_to: role === "PATIENT" && selectedDoctor !== "0" ? parseInt(selectedDoctor, 10) : null,
       });
       if (res.success && res.data) {
         saveTokens(res.data.access, res.data.refresh);
@@ -89,6 +98,20 @@ function Register() {
             </SelectContent>
           </Select>
         </div>
+        {role === "PATIENT" && (
+          <div className="space-y-2">
+            <Label>Assign to Doctor (Optional)</Label>
+            <Select value={selectedDoctor} onValueChange={setSelectedDoctor}>
+              <SelectTrigger className="w-full"><SelectValue placeholder="Select a doctor" /></SelectTrigger>
+              <SelectContent>
+                <SelectItem value="0">None</SelectItem>
+                {doctors.map(d => (
+                  <SelectItem key={d.id} value={String(d.id)}>{d.full_name} {d.specialty ? `(${d.specialty})` : ""}</SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          </div>
+        )}
         <Button type="submit" className="w-full" size="lg" disabled={loading}>
           {loading ? "Creating account…" : "Register"}
         </Button>
